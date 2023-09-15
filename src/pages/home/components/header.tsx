@@ -1,13 +1,12 @@
 import React from "react";
 
-const IsHeader = (props: { title: any; onShow: any; }) => {
-    const {title, onShow} = props
+const IsHeader = (props: { title: any; }) => {
+    const { title } = props
 
     return (
         <>
             <p>
                 {title}
-                <button onClick={onShow}>+</button>
             </p>
         </>
     )

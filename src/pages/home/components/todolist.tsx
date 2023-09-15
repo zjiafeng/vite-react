@@ -1,29 +1,56 @@
-import React from "react";
+import React, { useState } from 'react';
 
-const TodoList = (props: { list: any; }) => {
-    const {list} = props
+function SortableTable() {
+    const [data, setData] = useState([
+        { id: 1, name: 'John', age: 30 },
+        { id: 2, name: 'Alice', age: 25 },
+        { id: 3, name: 'Bob', age: 35 },
+        // Add more data as needed
+    ]);
+    const [sortBy, setSortBy] = useState(null);
+    const [sortDirection, setSortDirection] = useState('asc'); // or 'desc' for descending
 
-    const handleChange = () => {
-        console.log(1);
-    }
+    // Function to handle sorting based on a given field
+    const handleSort = (field: any) => {
+        // Toggle sort direction if the same field is clicked again
+        const newSortDirection = sortBy === field ? (sortDirection === 'asc' ? 'desc' : 'asc') : 'asc';
+
+        // Sort the data based on the field and direction
+        const sortedData = [...data].sort((a: any, b: any) => {
+            if (newSortDirection === 'asc') {
+                return a[field] - b[field];
+            } else {
+                return b[field] - a[field];
+            }
+        });
+
+        setData(sortedData);
+        setSortBy(field);
+        setSortDirection(newSortDirection);
+    };
 
     return (
-        <>
-            <ul>
-                {list.map((item: { check: boolean | undefined; flag: any; content: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined; },idx: React.Key | null | undefined)=>{
-                    return(
-                        <li key={idx} style={{display: 'flex'}}>
-                            <input type="checkbox" onChange={handleChange} checked={item.check}></input>
-                            <p style={{'textDecoration':item.flag?'line-through':'none'}}>{item.content}</p>
-                            <button>新增</button>
-                            <button>编辑</button>
-                            <button>删除</button>
-                        </li>
-                    )
-                })}
-            </ul>
-        </>
-    )
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th onClick={() => handleSort('id')}>ID {sortBy === 'id' && `(${sortDirection})`}</th>
+                        <th onClick={() => handleSort('name')}>Name {sortBy === 'name' && `(${sortDirection})`}</th>
+                        <th onClick={() => handleSort('age')}>Age {sortBy === 'age' && `(${sortDirection})`}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map((item) => (
+                        <tr key={item.id}>
+                            <td>{item.id}</td>
+                            <td>{item.name}</td>
+                            <td>{item.age}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
 }
 
-export default TodoList
+export default SortableTable;
